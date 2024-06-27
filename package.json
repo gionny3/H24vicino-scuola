@@ -1,0 +1,39 @@
+{
+  "name": "distributorih24ejs",
+  "version": "1.0.0",
+  "description": "distributori con ejs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "postcss public/css/main.css -o public/css/styles.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^10.4.19",
+    "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "csrf-csrf": "^3.0.4",
+    "ejs": "^3.1.9",
+    "express": "^4.19.1",
+    "express-mysql-session": "^3.0.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.0.1",
+    "flash": "^1.1.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.9.3",
+    "postcss-cli": "^11.0.0",
+    "sequelize": "^6.37.2",
+    "stripe": "^15.6.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

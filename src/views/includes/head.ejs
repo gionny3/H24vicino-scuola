@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./style.ejs") %> 
+<body class="bg-violet-700 font-roboto">
+    <div id="overlay" class="overlay"></div>
+    <div class="flex flex-col m-auto items-center justify-center modal">
+        <div id="myModal" class="hidden w-fit h-fit p-8 bg-white rounded-lg shadow-2xl shadow-black result-modal">
+          <form method="dialog" class="flex flex-col justify-start items-center mx-1 xxs:mx-0.5 xs:mx-2 md:mx-3">
+            <h1 class="text-xl mb-8 lg:text-2xl text-center">Impostazioni</h1>
+            <div class="flex flex-col justify-start items-start">
+                <h2 class="text-center mb-2 text-md lg:text-xl">Tipo:</h2>
+                <div class="flex flex-row mb-6 lg:text-lg md:text-md">
+                    <input type="radio" name="tipo" id="tutti" class="mr-1 radiotype" value="tutti"/>
+                    <label class="mr-3 xs:mr-6">tutti</label>
+                    <input type="radio" name="tipo" id="H24" class="mr-1 radiotype" value="H24"/>
+                    <label class="mr-3 xs:mr-6">H24</label>
+                </div>
+        
+                <div class="flex flex-col mb-6 justify-start">
+                    <label for="distanza">Distanza:</label>
+                    <input id="distanzaTel" class="w-64 appearance-none h-2 bg-purple-100 rounded-full outline-none hxl:pointer-events-none" min="1" max="20" step="1" type="range"/>
+                </div>
+                <div class="flex flex-col mb-10 justify-start">
+                    <label for="numeroRisultati">Numero Risultati:</label>
+                    <input id="NresultTel" class="w-64 appearance-none h-2 bg-purple-100 rounded-full outline-none" min="1" max="15" step="1" type="range"/>
+                </div>
+                
+            </div>
+            <div class="flex flex-row mb-6 justify-center items-center gap-8">
+                <% if(isAuth){ %> 
+                  
+                        <button id="logoutButton" class="bg-purple-700 px-4 py-2 text-white rounded-md active:bg-purple-900" type="submit">Logout</button>
+                    
+                <%  } else { %> 
+                    <a class="bg-purple-700 px-4 py-2 text-white rounded-md active:bg-purple-900" href="/signup">Vuoi entrare nel Team?</a>
+                <% } %> 
+            </div>
+            <button id="closeModalBtn" class="bg-purple-700 px-4 py-2 text-white rounded-md active:bg-purple-900">Close</button>
+        </form>
+        
+        </div>
+      </div>
+    <div id="root">
+      <div class="pageContent">
+        <header>
+            <nav class="fixed top-0 left-0 w-full flex flex-row justify-between bg-gray-800 text-white py-6 px-6 z-10">
+                <div class="hxl:flex flex-row items-center justify-center w-full xl:ml-[14.70em] hxl:ml-[1em] xxxs:hidden">
+                    <div class="hidden hxl:mx-4 hxl:flex flex-row hxl:items-center">
+                        <select id="tipo" name="tipo" class="block appearance-none w-28 text-center bg-gray-200 border border-gray-200 text-gray-700 py-3 px-2 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <label class="mr-4 text-stone-100 text-md lg:text-lg xl:text-xl">Tipo:</label>
+                            <option value="tutti">Tutti</option>
+                            <option value="auto">H24</option>
+                            <option value="moto">NaN</option>
+                        </select>
+                    </div>
+                    <div class="hidden hxl:mx-4 hxl:flex flex-row hxl:items-center">
+                        <label class="mr-4 text-stone-100 text-md lg:text-lg xl:text-xl">Numero risultati:</label>
+                        <input id="Nresult" type="number" max="15" min="3" name="Nresult" placeholder="max: 15" class="appearance-none border-none bg-transparent focus:outline-none w-24">
+                    </div>
+                    <div class="hidden hxl:mx-4 hxl:flex flex-row hxl:items-center">
+                        <label class="mr-4 text-stone-100 text-md lg:text-lg xl:text-xl">Distanza:</label>
+                        <input id="distanza" type="number" max="50" min="3" name="range" placeholder="max: 20km" class="appearance-none border-none bg-transparent focus:outline-none w-28">
+                    </div>
+                    <div class="hidden hxl:mx-4 hxl:flex flex-row hxl:items-center">
+                        <label class="mr-4 text-stone-100 text-md lg:text-lg xl:text-xl">Cerca</label>
+                        <button type="button" onclick="SendRequest()"><img src="/images/search.svg" alt="" class="border border-stone-100 p-3 rounded-md"></button>
+                    </div>
+                </div>
+                <div class="hxl:flex hxl:flex-row items-center justify-end w-2/12 xxxs:hidden ">
+                    <div>
+                        
+                            <% if(isAuth){ %>
+                                <form action="/logout" method="post">
+                                    <button class=" text-black bg-slate-50 rounded-xl text-md  lg:text-lg xl:text-xl px-8 py-3" >Logout</button>
+                                </form>
+                                <% }else{%>
+                                    <form action="/signup" method="get">
+                                        <button class=" text-black bg-slate-50 roundd-xl text-md  lg:text-lg xl:text-xl px-8 py-3" >Entra nel Team</button>
+                                    </form>
+                               <% }%> 
+                            
+                    </div>
+                </div>
+                <% if (PageTitle === "H24") { %>
+                    <img src="/images/gear-fill.svg" alt="" class="block border border-stone-100 p-3 rounded-md hxl:hidden" id="setting">
+                 
+                <% }else{%>
+                    
+                    <a href="/"><img src="/images/arrow-left.svg" alt="" class="block border border-stone-100 p-3 rounded-md hxl:hidden"></a>
+
+
+                    <% } %>
+              <h1 class="xxxs:hidden xxs:block hxl:hidden text-stone-100 text-lg sm:text-xl md:text-2xl">Distributoriii H24 vicino a te!</h1>
+              <img src="/images/search.svg" alt="" onclick="SendRequest()" class="block hxl:hidden border border-stone-100 p-3 rounded-md" id="search">
+            </nav>
+            
+        </header>
+        <h1 class="block xxs:hidden hxl:block mb-10 hxl:mt-32 xxxs:mt-24 text-center text-stone-100 hxl:text-4xl xxxs:text-[1.4rem] xxxs:mb-4 "><%= pageContent.title %> </h1>
+        <p class=" xxs:mt-28  text-stone-100 text-md sm:text-lg md:text-xl xl:text-2xl hxl:mt-0 xxxs:text-xs xxxs:mt-4"><%= pageContent.paragraph %> </p>
+        
+        
+    </div>

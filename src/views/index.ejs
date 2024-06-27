@@ -1,0 +1,58 @@
+<%- include("./includes/head.ejs") %> 
+
+    <main class="my-10 hxl:mx-16 md:mx-8 sm:mx-7 xxxs:mx-4">
+      <% if(successMessage.length>0){%>
+        <div id="avviso" class="avviso-visible bg-lime-500 bg-opacity-50 p-8 border-2 border-lime-700 border-double">
+          <%= successMessage[0]  %> 
+      </div>
+        <%  } %> 
+        <% if(failedMessage.length>0){%>
+          <div id="avviso" class="avviso-visible bg-red-500 bg-opacity-50 p-8 border-2 border-red-700 border-double">
+            <%= failedMessage[0]  %> 
+        </div>
+          <%  } %> 
+      <% if (error){ %>
+        <p><%= error %> </p>
+        <% }else{ %> 
+      <% if (data.length>0){ %>
+        
+        <p class="text-md text-stone-100 lg:text-lg xl:text-xl my-6">Risultati:</p>
+          <div id="resContainer">
+          <div id="res" class="flex flex-col gap-2 justify-start items-start">
+
+        <% data.forEach(macchinetta => { %> 
+          <div class='flex justify-normal items-center bg-purple-900 bg-opacity-50 w-full'>
+            <div class='border-r-[0.075em] sm:w-3/12 text-start p-6 h-28 md:items-center xxxs:w-6/12'>
+              <h1 class='text-stone-100 sm:text-[0.975rem] lg:text-lg xl:text-xl xxxs:text-xl '><%= macchinetta.nome %></h1>
+            </div>
+            <div class='border-r-[0.075em] sm:w-3/12 text-start p-6 h-28 md:items-center sm:block xxxs:hidden'>
+              <h1  class='text-stone-100 sm:text-[0.975rem] lg:text-lg xl:text-xl xxxs:text-xl '><%= macchinetta.luogo %></h1>
+            </div>
+            <div class='border-r-[0.075em] sm:w-3/12 text-start p-6 h-28 md:items-center sm:block xxxs:hidden'>
+              <h1 class='text-stone-100 sm:text-[0.975rem] lg:text-lg xl:text-xl xxxs:text-xl '><%= macchinetta.Comune.nome %></h1>
+            </div>
+            <div class='sm:w-3/12 text-start p-6 h-28 md:items-center xxxs:w-6/12'>
+              <a style="line-height: 1.5rem;" class='text-stone-100 sm:text-[0.975rem] lg:text-lg xl:text-xl xxxs:text-xl' target="_blank" href="https://www.openstreetmap.org/note/new?lat=<%=macchinetta.posizione.coordinates[0]%>&lon=<%=macchinetta.posizione.coordinates[1]%>">clicca qui</a>
+            </div>
+          </div>
+      
+          <% }); %> 
+        </div>
+
+        </div>
+        <% }else{ %>
+          <h1>Loading...</h1>
+          <div className="loader"></div> 
+        <% } %>
+        <% } %>
+        
+      
+    </main>
+    
+    
+  </div>
+  <%- include("./includes/footer.ejs") %> 
+  <script src="js/geolocation.js"></script>
+
+</body>
+</html>

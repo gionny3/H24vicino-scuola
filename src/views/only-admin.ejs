@@ -1,0 +1,55 @@
+<%- include("./includes/head.ejs") %> 
+<main class="flex flex-col gap-3 items-center justify-center m-4 mb-8">
+    <% if(successMessage.length>0){%>
+        <div id="avviso" class="avviso-visible bg-lime-500 bg-opacity-80 p-8 border-2 border-lime-700 border-double">
+          <%= successMessage[0]  %> 
+      </div>
+        <%  } %> 
+        <% if(failedMessage.length>0){%>
+          <div id="avviso" class="avviso-visible bg-red-500 bg-opacity-80 p-8 border-2 border-red-700 border-double">
+            <%= failedMessage[0]  %> 
+        </div>
+          <%  } %> 
+    <% if(requests.length>0){%>
+        <div class="flex flex-col gap-3 items-center justify-normal w-full">
+        <% requests.forEach(request => {%> 
+            <div class="flex flex-row justify-normal items-center bg-purple-900 bg-opacity-50 w-full">
+                <div class="border-r-[0.075em] w-6/12 text-start p-6 ">
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Email: <%= request.user.email %></p>
+                </div>
+                <div class="border-r-[0.075em] w-3/12 text-start p-6">
+                    <p  class="text-stone-100 text-md lg:text-lg xl:text-xl">Citta: <%= request.user.citta %></p>
+
+                </div >
+                <div class="border-r-[0.075em] w-3/12 text-start p-6">
+                    <p  class="text-stone-100 text-md lg:text-lg xl:text-xl">Data: <%= request.dataRichiesta %></p>
+                </div>
+                <div class=" w-2/12 p-6 flex flex-row items-end justify-end gap-2">
+                    <a href="/request-details/<%= request.id %>">
+                        
+                        <button><img src="/images/question-diamond-fill.svg" alt="" class="hxl:w-16 lg:w-[6.40em] md:w-40 sm:w-[40em]"></button>
+                    </a>
+                    <form action="/denied-access" method="post">
+                        <input type="hidden" name="requestId" value="<%= request.id %>">
+                        <input type="hidden" name="userId" value="<%= request.userCf %>">
+                        <button><img src="/images/ban-fill.svg" alt="" class="hxl:w-16 lg:w-[6.40em] md:w-40 sm:w-[40em]"></button>
+                    </form>
+                    <form action="/confirm-access" method="post">
+                        <input type="hidden" name="requestId" value="<%= request.id %>">
+                        <input type="hidden" name="userId" value="<%= request.userCf %>">
+                        <button><img src="/images/check-square-fill.svg" alt="" class="hxl:w-16 lg:w-[6.40em] md:w-40 sm:w-[40em]"></button>
+                    </form>
+                    
+                </div>
+            </div>
+            <%  }); %> 
+        <% }else{%>
+            <h1 class="text-stone-100 xxxs:text-lg xs:text-xl hxl:text-2xl xl:text-3xl mb-2">Non ci Sono Richieste da Confermare</h1>
+      <%  }  %>
+    </div>
+    
+</main>
+<%- include("./includes/footer.ejs") %> 
+
+</body>
+</html>

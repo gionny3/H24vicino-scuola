@@ -1,0 +1,53 @@
+<%- include("./includes/head.ejs") %> 
+<main class="flex flex-col m-6 justify-center items-center">
+    <div class="flex flex-col justify-center items-center gap-8 bg-purple-900 bg-opacity-50 p-8">
+        <div class="flex flex-row justify-center items-center gap-32">
+            <div class="flex flex-col items-start">
+                <h2 class="text-stone-100 text-xl lg:text-2xl xl:text-3xl">Dettagli utente</h2>
+                <% if(request){%> 
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Email: <%=request.user.email  %> </p>
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Nome: <%= request.user.name %></p>
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Cognome: <%=request.user.surname  %></p>
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Citta: <%=request.user.citta  %></p>
+                    <% }else{%> 
+                        <p>Non sono disponibili dettagli per quest utente/p>
+                        <% } %> 
+                
+    
+            </div>
+            <div class="flex flex-col items-end justify-start">
+                <h2 class="text-stone-100 text-xl lg:text-2xl xl:text-3xl">Dettagli richiesta</h2>
+                <% if(request){%> 
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Motivo:<%=request.motivazione%></p>
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">Data:<%=request.dataRichiesta%></p>
+                    <p class="text-stone-100 text-md lg:text-lg xl:text-xl">visto:<%=request.viewed%></p>
+                    
+                    <% }else{%> 
+                        <p>Non sono disponibili dettagli per questa richiesta/p>
+                        <% } %>
+    
+            </div>
+        </div>
+        
+
+<% if(request){%> 
+    <div class="flex flex-row w-full items-center justify-center gap-8">
+        <form action="/denied-access" method="post">
+            <input type="hidden" name="requestId" value="<%= request.id %>">
+            <input type="hidden" name="userId" value="<%= request.userCf %>">
+            <button><img src="/images/ban-fill.svg" alt="" class="hxl:w-16 lg:w-[6.40em] md:w-40 sm:w-[40em]"></button>
+        </form>
+        <form action="/confirm-access" method="post">
+            <input type="hidden" name="requestId" value="<%= request.id %>">
+            <input type="hidden" name="userId" value="<%= request.userCf %>">
+            <button><img src="/images/check-square-fill.svg" alt="" class="hxl:w-16 lg:w-[6.40em] md:w-40 sm:w-[40em]"></button>
+        </form>
+    </div>
+                <% } %>
+    </div>
+
+</main>
+<%- include("./includes/footer.ejs") %> 
+
+</body>
+</html>
