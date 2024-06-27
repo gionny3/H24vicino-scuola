@@ -223,12 +223,6 @@ sessionStore.onReady()
     return Comune.findByPk(1)
 })
 .then(comune=>{
-    if(!comune){
-        Comune.bulkCreate([
-            {nome:"San Giorgio a Cremano"},
-            {nome:"Portici"}
-        ])
-    }
     return Macchinette.findByPk(1)
 })
 .then(macchinette=>{
