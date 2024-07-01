@@ -11,6 +11,5 @@ const router=express.Router()
 
 router.post("/",MainController.postMain)
 router.get("/",MainController.getIndex)
-// router.get("/test",isConfirmed,MainController.getTest);
 
 exports.MainRoutes=router

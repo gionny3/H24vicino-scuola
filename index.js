@@ -25,6 +25,9 @@ const file=fs.readFileSync(fileName,"utf-8")
 
 const stripe=require("stripe")(process.env.STRIPE_KEY)
 const app=express()
+app.set("view engine","ejs");
+app.set("views", "src/views")
+
 
 const options = {
   host: process.env.DB_HOST,
@@ -33,10 +36,10 @@ const options = {
   password: process.env.DB_PWD,
   database: process.env.DB_NAME
 };
-
 const privateKey= fs.readFileSync("server.key")
 const certificate =fs.readFileSync("-server.cert")
-
+const accessLogFile=fs.createWriteStream(path.join(__dirname,"access.log"),{flags:"a"})
+const listSite=["https://localhost:3002",`https://${process.env.IP_ADDRESS}:49200`,"https://js.stripe.com/v3","https://m.stripe.com/6"]
 
 
 const sessionStore=new MySqlStore(options);
@@ -44,30 +47,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-const accessLogFile=fs.createWriteStream(path.join(__dirname,"access.log"),{flags:"a"})
-
-const listSite=["https://localhost:3002/",`https://${process.env.IP_ADDRESS}:49200`,"https://js.stripe.com/v3/","https://m.stripe.com/6,https://matomo.openstreetmap.org"]
-const corseOption={
-    origin: (origin,callback)=>{
-        if(listSite.indexOf(origin)!==-1 || !origin){
-          callback(null,true)
-        }else{
-          callback(new Error("Not allowed"))
-        }
-      },
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      optionsSuccessStatus: 204
-  
-}
-app.set("view engine","ejs");
-app.set("views", "src/views")
 app.use(session({
   secret: process.env.SECRET_KEY,
   resave:false,
   saveUninitialized:false,
   store:sessionStore
 }))
-app.use(flash())
 
 app.use((req,res,next)=>{
   if(!req.session.user){
@@ -81,14 +66,31 @@ app.use((req,res,next)=>{
   .catch(err=>console.log(err))
 })
 
-// app.use((req,res,next)=>{
-//   const csrfToken=doubleCsrfUtilities.generateToken(req,res)
-//   console.log(csrfToken)
-//   res.json({csrfToken})
-//   next()
-// })
+
+app.use((req,res,next)=>{
+  res.locals.isAuth=req.session.isLoggedIn
+  next()
+})
+
+const corseOption={
+    origin: (origin,callback)=>{
+        if(listSite.indexOf(origin)!==-1 || !origin){
+          callback(null,true)
+        }else{
+          callback(new Error("Not allowed"))
+        }
+      },
+      methods: '*',
+      optionsSuccessStatus: 204
+  
+}
+app.use(cors({
+  origin: '*',
+  methods: '*'
+}))
 
 
+app.use(flash())
 Comune.hasMany(Macchinette)
 Macchinette.belongsTo(Comune)
 User.hasOne(Request)
@@ -97,11 +99,6 @@ Request.belongsTo(User)
 
 
 
-app.use((req,res,next)=>{
-  res.locals.isAuth=req.session.isLoggedIn
-  next()
-})
-app.use(cors(corseOption))
 app.use(helmet.dnsPrefetchControl());
 app.use(helmet.frameguard());
 app.use(helmet.hidePoweredBy());
@@ -114,27 +111,6 @@ app.use(helmet.xssFilter());
 app.use(compression())
 app.use(morgan("combined",{stream:accessLogFile}))
 
-// app.use(helmet())
-// app.use(helmet.contentSecurityPolicy({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     scriptSrc: ["'self'", "https://82.53.82.154:49200","https://js.stripe.com/v3/","https://m.stripe.com/6","https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
-//       "https://fonts.googleapis.com","https://fonts.gstatic.com","https://cdn.tailwindcss.com","https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js",
-//       "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js","https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-//     ],
-//     objectSrc: ["'none'"],
-//     upgradeInsecureRequests: [],
-//   }
-// }));
-// app.use(compression())
-
-// app.use((req,res,next)=>{
-//   const nonce=crypto.randomBytes(16).toString("base64")
-//   res.setHeader("Content-Security-Policy", 
-//     `default-src 'self'; script-src 'self' 'nonce-${nonce}';`)
-//   res.locals.nonce=nonce
-//   next()
-// })
 
 app.use(MainRoute.MainRoutes)
 app.use(AuthRoute.AuthRoutes)
@@ -244,5 +220,3 @@ sessionStore.onReady()
 })
 .catch(err=>console.log(err))
 
-// exports.doubleCsrfProtection=doubleCsrfProtection
-// exports.generateToken=generateToken

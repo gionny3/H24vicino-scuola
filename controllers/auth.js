@@ -171,6 +171,7 @@ exports.postLogin=(req,res,next)=>{
 }
 
 exports.postSignUp = (req, res, next) => {
+    console.log("dioc")
     const {password,email,name,surname,address,citta,motivation:motivazione,provincia,cf:CF}=req.body
     const errors = validationResult(req);
     
