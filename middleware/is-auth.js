@@ -14,18 +14,15 @@ exports.isConfirmed=(req,res,next)=>{
         return User.findByPk(req.session.user.cf)
             .then(user => {
                 if (!user.isConfirmed) {
-                    return res.status(403).render("errorPage", {
-                        PageTitle: "Denied",
-                        pageContent: {
-                            title: "Accesso Negato (403)",
-                            paragraph: "Spiacenti, La tua richiesta deve essere ancora convalidata."
-                        }
-                    });
+                    throw new Error("Accesso Negato")
                 } else {
                     next();
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                err.statusCode=403
+                return next(err)
+            });
     }
 }
 
@@ -37,19 +34,15 @@ exports.isAdmin = (req, res, next) => {
         return User.findByPk(req.session.user.cf)
             .then(user => {
                 if (!user.superUser) {
-                    return res.status(403).render("errorPage", {
-                        PageTitle: "Denied",
-                        pageContent: {
-                            title: "Accesso Negato (403)",
-                            paragraph: "Spiacenti, non hai i privilegi necessari. Contatta l'amministratore di sistema per ulteriori informazioni."
-                        }
-                    });
+                    throw new Error("Accesso Negato")
                 } else {
                     next();
                 }
             })
-            .catch(err => console.log(err));
-    }
+            .catch(err => {
+                err.statusCode=403
+                return next(err)
+            });    }
 };
 
 exports.isNotAuth=(req,res,next)=>{

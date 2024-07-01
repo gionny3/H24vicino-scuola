@@ -37,7 +37,7 @@ const options = {
   database: process.env.DB_NAME
 };
 const privateKey= fs.readFileSync("server.key")
-const certificate =fs.readFileSync("-server.cert")
+const certificate =fs.readFileSync("server.cert")
 const accessLogFile=fs.createWriteStream(path.join(__dirname,"access.log"),{flags:"a"})
 const listSite=["https://localhost:3002",`https://${process.env.IP_ADDRESS}:49200`,"https://js.stripe.com/v3","https://m.stripe.com/6"]
 
