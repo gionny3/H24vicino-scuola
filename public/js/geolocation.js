@@ -50,6 +50,7 @@ function SendRequest() {
       latitudine = position.coords.latitude
       longitudine = position.coords.longitude
     }, function(err) {
+      window.alert("Non hai attivato la geolocalizzazione, perfavore attivala per un corretto uso")
       console.log("Errore durante il recupero della posizione", err)
     },{enableHighAccuracy:true})
   } else {

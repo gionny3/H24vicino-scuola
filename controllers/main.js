@@ -2,7 +2,7 @@ const { Sequelize,fn ,col,literal} = require("sequelize")
 const Comune = require("../models/comune")
 const Macchinette = require("../models/macchinette")
 const puntoInAreaCircolare = require("../util/distance_fn")
-const stripe=require("stripe")("sk_test_51PCNWJ04Be2YLbccJufR5x1yY6LdFFvyyYFtRyX01kn0jtBcUqJAuEmsIll9NuTWqjiiq4gLU0WP2E5KyzS7SgjH00vYFXBKJ9")
+const stripe=require("stripe")(process.env.STRIPE_KEY)
 
 
 

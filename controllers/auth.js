@@ -6,7 +6,7 @@ const moment = require('moment');
 const Macchinette = require("../models/macchinette");
 const Comune = require("../models/comune");
 const { literal } = require("sequelize");
-const stripe=require("stripe")("sk_test_51PCNWJ04Be2YLbccJufR5x1yY6LdFFvyyYFtRyX01kn0jtBcUqJAuEmsIll9NuTWqjiiq4gLU0WP2E5KyzS7SgjH00vYFXBKJ9")
+const stripe=require("stripe")(process.env.STRIPE_KEY)
 
 
 exports.getLogin=(req,res,next)=>{
@@ -171,7 +171,6 @@ exports.postLogin=(req,res,next)=>{
 }
 
 exports.postSignUp = (req, res, next) => {
-    console.log("dioc")
     const {password,email,name,surname,address,citta,motivation:motivazione,provincia,cf:CF}=req.body
     const errors = validationResult(req);
     
@@ -250,9 +249,8 @@ exports.postSignUp = (req, res, next) => {
     .then(() => {
         res.locals.isAuth=req.session.isLoggedIn
         setTimeout(() => {
-
             res.redirect("/");
-        }, 500);
+        }, 1000);
     })
     .catch(err => {
         const error= new Error("Errore nel Sistema")
